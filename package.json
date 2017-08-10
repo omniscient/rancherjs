@@ -1,0 +1,36 @@
+{
+  "name": "@omniscient/rancher",
+  "version": "1.0.0",
+  "description": "Library to talk to Rancher API",
+  "author": "Omniscient Technology",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omniscient/rancherjs"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "gulp build",
+    "lint": "cross-env ../../node_modules/.bin/tslint --project tsconfig.json",
+    "watch": "gulp watch",
+    "test": "tape ./dist/_test/**/*.js"
+  },
+  "bin": {
+    "rancher": "dist/rancher.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "commander": "^2.11.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.1",
+    "merge2": "^1.1.0",
+    "node-fetch": "^1.7.1"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.9.1",
+    "@types/node-fetch": "^1.6.7",
+    "del": "^3.0.0",
+    "tape": "^4.8.0",
+    "typescript": "^2.4.2"
+  }
+}
