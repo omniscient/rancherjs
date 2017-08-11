@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 
 export class RancherJs {
   public apiVersion: string;
+  public timeout: number = 120;
 
   private base64encodedData: string;
   private url: string;
@@ -77,6 +78,7 @@ export class RancherJs {
       return Promise.reject(`${serviceName} - Cannot be updated due to its current state ${service.state}`);
     }
 
+    this.log(serviceName, `Upgrade is staring...`)
     const upgradeServiceUrl: string = this.url + '/services/' + service.id + '?action=upgrade';
     await fetch(upgradeServiceUrl, {
       method: 'post',
@@ -107,17 +109,18 @@ export class RancherJs {
 
   private async waitForStatus(serviceName: string, statusToWaitFor: string): Promise<string> {
     let state = '';
-    let retry = 15;
-
-    this.log(serviceName, `Waiting for status ${statusToWaitFor}`);
+    this.log(serviceName, `Waiting for status ${statusToWaitFor} for ${this.timeout} seconds.`);
+    const startTime = new Date().getTime()
     while (state !== statusToWaitFor) {
       const service = await this.getService(serviceName);
       state = service.state;
-      retry -= 1;
-      if (retry <= 0) {
+      let timeDiff = Math.round((new Date().getTime() - startTime)/1000);
+
+      this.log(serviceName, `${timeDiff} seconds elapsed...`);
+      if (timeDiff >= this.timeout) {
         return Promise.reject(`${serviceName} - Took too long to upgrade`);
       }
-      this.log(serviceName, `...`);
+      
       await this.sleep(5000);
     }
 
